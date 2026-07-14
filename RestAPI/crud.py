@@ -1,6 +1,7 @@
 from models import User, Admin, Wallet, Task
 from sqlalchemy.orm import Session
 from sqlalchemy import text, select
+from datetime import date
 #from util import hash_password, verify_password
 
 #import bcrypt
@@ -25,6 +26,17 @@ class TaskRepository():
 
     def find_open_tasks(self)-> list[Task]:
         return self.session.query(Task).filter(Task.status == "OPEN").all()
+
+    def find_one_tasks(self, shop_date:date) -> list[Task]:
+        #statement = select(Task).where(Task.shop_date == shop_date)
+        #result = self.session.execute(statement)
+        #return list(result.scalars().all())
+        query = (
+            self.session.query(Task)
+            .filter(Task.shop_date == shop_date)
+            #.filter(Task.status == "OPEN")
+        )
+        return query.all()
 
     def create_task(self, task:Task) -> Task:
         existing = self.session.query(Task).filter(Task.monat==task.monat, Task.jahr==task.jahr).first()
@@ -58,6 +70,7 @@ class UserRepository():
 '''
     def find_user_by_id(self, id:int)-> User | None:
         return self.session.get(User, id)
+    
     def delete_user(self, user_id:int)-> User | None:
         user = self.session.get(User, user_id)
         if user is None:
@@ -86,8 +99,6 @@ class WalletRepository():
     #     self.session.commit()
     #     self.session.refresh(todo) 
     #     return todo
-
-
 
     def update_wallet_state(self, todo_id:int, new_state:str)->Todo | None:
         allowed = {"OPEN","IN_PROGRESS","DONE"}
@@ -119,6 +130,7 @@ class WalletRepository():
 
    # def find_open_todos_by_user(self,user_id:int)->list[Todo]:
    #     return (self.session.query(Todo).filter(Todo.user_id == user_id, Todo.state == "OPEN").all())
+    
     def find_open_wallet_by_user(self, user_id: int) -> list[Todo]:
         query = (
             self.session.query(Todo)

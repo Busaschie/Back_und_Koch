@@ -44,14 +44,13 @@ class User(Base,BaseRepr):
 class Task(Base,BaseRepr):
     __tablename__ = "task"
     id = Column(Integer, primary_key=True)
-    date = Column(DateTime, server_default=func.now())
+    date = Column(Date, server_default=func.now())
     monat = Column(String(50))
     jahr = Column(Integer)
     shop_date = Column(Date)
     abgabe_date = Column(Date)
     geld_date = Column(Date)
     status = Column(Enum("OPEN", "DONE"), nullable=False, default="OPEN")
-    user_id = Column(Integer)
 #
 class Artikel(Base, BaseRepr):
     __tablename__ = "waren"

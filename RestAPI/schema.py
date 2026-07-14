@@ -36,7 +36,6 @@ class TaskBase(BaseModel):
     shop_date:date
     abgabe_date:date
     geld_date:date
-    user_id: int | None = None
     #TaskStatus = TaskStatus.OPEN
 
 class TaskRead(TaskBase):

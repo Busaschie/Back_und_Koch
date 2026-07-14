@@ -45,13 +45,18 @@ def get_all_task(db:Session = Depends(get_db)):
     repo = TaskRepository(db)
     return repo.find_all_tasks()
 
+@task_router.get("/tasks1", response_model = list[TaskRead])
+def get_one_task(shop_date:date, db: Session = Depends(get_db)):
+    repo = TaskRepository(db)
+    return repo.find_one_tasks(shop_date)
+
 @task_router.get("/open", response_model = list[TaskRead])
 def get_open_task(db: Session = Depends(get_db)):
     repo = TaskRepository(db)
     return repo.find_open_tasks()
 
 #@task_router.post("/", response_model = TaskRead) # Query
-@task_router.post("/", response_model = TaskRead) # Pfad
+@task_router.post("/save", response_model = TaskRead) # Pfad
 def create_new_task(task_create:TaskCreate, db:Session = Depends(get_db)):
     repo = TaskRepository(db)
     new_task = Task(**task_create.model_dump()) # konverieren TaskCreate to Task (DB) / model_dump() -> dict
