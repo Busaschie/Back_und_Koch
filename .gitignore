@@ -55,14 +55,6 @@ node_modules/
 npm-debug.log*
 
 # ==========================================
-# SQLAlchemy & Datenbanken
-# ==========================================
-# Lokale SQLite-Datenbanken (sehr häufig bei SQLAlchemy-Entwicklung)
-*.db
-*.sqlite
-*.sqlite3
-
-# ==========================================
 # FastAPI & Umgebungsvariablen (Security)
 # ==========================================
 # Sensible Daten (Passwörter, API-Keys in .env-Dateien)
