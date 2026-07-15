@@ -22,9 +22,9 @@ class Wallet(Base, BaseRepr):
      grund = Column(String(100))
      old_amount = Column(Integer)
      new_amount = Column(Integer)
-     task_id = Column(Integer, ForeignKey("task.id",ondelete="CASCADE"),nullable=False)
+     task_id = Column(Integer)
      betrag = Column(Integer)
-     user_id = Column(Integer, ForeignKey("user.id",ondelete="CASCADE"),nullable=False)
+     buchnummer = Column(String(10))
 #
 class Admin(Base,BaseRepr):
     __tablename__="admin"

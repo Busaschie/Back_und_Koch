@@ -22,7 +22,7 @@ class TaskRepository():
         self.session=session
 
     def find_all_tasks(self)-> list[Task]:
-        return self.session.query(Task).all()
+        return self.session.query(Task).order_by(Task.id.desc()).all()
 
     def find_open_tasks(self)-> list[Task]:
         return self.session.query(Task).filter(Task.status == "OPEN").all()
@@ -86,7 +86,7 @@ class UserRepository():
             return None
         return  stored_user if verify_password(password, stored_user.password) else None
 
-
+'''
 # ----------------------
 # Wallet
 # ----------------------
@@ -100,58 +100,73 @@ class WalletRepository():
     #     self.session.refresh(todo) 
     #     return todo
 
-    def update_wallet_state(self, todo_id:int, new_state:str)->Todo | None:
+    def create_wallet(self, id:Wallet) -> Wallet:
+        #existing = self.session.query(User).filter(User.buchnummer == user.buchnummer).first()
+        #if existing:
+        #    raise ValueError("User existiert bereits!")
+        self.session.add(id)
+        self.session.commit()
+        self.session.refresh(id)
+        return id
+
+    def find_all_wallets(self)->list[Wallet]:
+        return self.session.query(Wallet).all()
+
+    def find_wallet_by_buchnummer(self,buchnummer:str)->list[Wallet]:
+        return self.session.query(Wallet).filter(Wallet.buchnummer==buchnummer).all()
+
+    def find_wallet_by_task(self,task_id:int)->list[Wallet]:
+        return self.session.query(Wallet).filter(Wallet.task_id==task_id).all()
+
+    def find_wallet_last_task_user(self,buchnummer:str)->Wallet:
+        return self.session.query(Wallet).filter(Wallet.buchnummer==buchnummer).order_by(Wallet.id.desc()).first()
+        #return self.session.query(Wallet).filter(Wallet.buchnummer==buchnummer).all()
+
+
+    '''
+    
+    def update_wallet_state(self, todo_id:int, new_state:str)->Wallet | None:
         allowed = {"OPEN","IN_PROGRESS","DONE"}
         if new_state not in allowed:
             raise ValueError(f"Invalid State, allowed: {allowed}")
-        todo = self.session.get(Todo,todo_id)
-        if not todo:
+        wallet = self.session.get(Wallet,todo_id)
+        if not wallet:
             return None
-        todo.state = new_state
+        wallet.state = new_state
         self.session.commit()
-        self.session.refresh(todo)
-        return todo
+        self.session.refresh(wallet)
+        return wallet
 
-    def find_wallet_by_task(self,user_id:int,task:str)->list[Todo]:
-        return (self.session.query(Todo).filter(Todo.user_id==user_id,Todo.task.ilike(f"%{task}%")).all())
-
-#----------------------
-# todo
-
-    def new_wallet_by_user(self, user_id: int, todo: Todo) -> Todo:
+    def new_wallet_by_user(self, user_id: int, wallet: Wallet) -> Wallet:
         user = self.session.get(User, user_id)
-        user.todos.append(todo)
+        user.wallets.append(wallet)
         self.session.commit()
-        self.session.refresh(todo)
-        return todo
+        self.session.refresh(wallet)
+        return wallet
 
-    def find_wallet_by_user(self,user_id:int)->list[Todo]:
-        return self.session.query(Todo).filter(Todo.user_id==user_id).all()
-
-   # def find_open_todos_by_user(self,user_id:int)->list[Todo]:
-   #     return (self.session.query(Todo).filter(Todo.user_id == user_id, Todo.state == "OPEN").all())
+   # def find_open_todos_by_user(self,user_id:int)->list[Wallet]:
+   #     return (self.session.query(Wallet).filter(Wallet.user_id == user_id, Wallet.state == "OPEN").all())
     
-    def find_open_wallet_by_user(self, user_id: int) -> list[Todo]:
+    def find_open_wallet_by_user(self, user_id: int) -> list[Wallet]:
         query = (
-            self.session.query(Todo)
-            .filter(Todo.user_id == user_id)
-            .filter(Todo.state == "OPEN")
+            self.session.query(Wallet)
+            .filter(Wallet.user_id == user_id)
+            .filter(Wallet.state == "OPEN")
         )
         return query.all()
-#---------------------
 
-    def delete_wallet(self, todo_id:int)-> Todo | None:
+    def delete_wallet(self, todo_id:int)-> Wallet | None:
         """ """
-        todo = self.session.get(Todo,todo_id)
-        if todo is  None:
+        wallet = self.session.get(Wallet,todo_id)
+        if wallet is  None:
             return None
-        self.session.delete(todo)
+        self.session.delete(wallet)
         self.session.commit()
-        return todo
+        return wallet
 
     def delete_all_done_wallet(self,user_id:int)->int:
         wallet = (
-            self.session.query(wall)
+            self.session.query(wallet)
             .filter(
                 Wallet.user_id == user_id,
                 Wallet.state == "DONE"
@@ -164,3 +179,4 @@ class WalletRepository():
         self.session.commit()
         return  count
 '''
+

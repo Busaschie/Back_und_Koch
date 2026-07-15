@@ -3,25 +3,27 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from datetime import date
 
-'''
+
 #-----------------------------------------------
 # Wallet
 #-----------------------------------------------
 class WalletBase(BaseModel):
     date:date
     grund:str | None = None
-    old_amount:str
-    new_amount:str
-    betrag:str
-    user_id:UserRead.id
-    task_id:TaskRead.id
+    old_amount:int
+    new_amount:int
+    betrag:int
+    #user_id:UserRead.id
+    #task_id:TaskRead.id
+    buchnummer:str
+    task_id:int
 
 class WalletRead(WalletBase):
     id:int
 
 class WalletCreate(WalletBase):
     pass
-'''
+
 #-----------------------------------------------
 # Task
 #-----------------------------------------------
